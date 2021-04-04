@@ -431,7 +431,7 @@ Vue.createApp(
         () => mapCollect(mapValues(
           Vue.unref(evidencePossibleScenarioCount),
           v => {
-            const probability = v / ghostsToEvidences.size
+            const probability = v / Vue.unref(possibleGhostsRefinedByCheckbox).length
             return (probability * 100).toFixed(2) + '%'
           }
         ))
@@ -450,7 +450,7 @@ Vue.createApp(
       const possibleEvidences = Vue.computed(
         () => fromIterableSorted(
           without(evidenceList, Vue.unref(loggedEvidences)),
-          scalarSort(e => getOrFail(
+          scalarSort(e => -getOrFail(
             Vue.unref(evidencePossibleScenarioCount),
             e
           ))
@@ -478,6 +478,11 @@ Vue.createApp(
 
       const delogEvidence = (e: Evidence) => evidenceCheckState.delete(e)
 
+      const newGame = () => {
+        ghostCheckState.clear()
+        evidenceCheckState.clear()
+      }
+
       return {
         possibleGhosts,
         ghostCheckState,
@@ -485,31 +490,53 @@ Vue.createApp(
         possibleEvidences,
         loggedEvidences,
         evidenceProbabilities,
+        ghostsToEvidences,
+        newGame,
         logEvidence,
         delogEvidence,
         affirmGhost,
         denyGhost,
-        uncheckGhost
+        uncheckGhost,
       }
     },
     template: `
       <div class="container">
         <div class="row">
+          <div @click="newGame">New Game</div>
+        </div>
+        <div class="row">
           <div class="col-6">
             <ul>
-              <li v-for="e of loggedEvidences" :key="e">{{e}}</li>
+              <li v-for="e of loggedEvidences" :key="e">
+                <div @click="logEvidence(e, true)">{{e}}</div>
+                <div @click="logEvidence(e, true)">Yes</div>
+                <div @click="logEvidence(e, false)">No</div>
+                <div @click="delogEvidence(e)">Clear</div>
+              </li>
             </ul>
           </div>
           <div class="col-6">
             <ul>
-              <li v-for="e of possibleEvidences" @click="logEvidence(e, true)" :key="e">{{e}}</li>
+              <li v-for="e of possibleEvidences" @click="logEvidence(e, true)" :key="e">
+                <div @click="logEvidence(e, true)">{{e}}</div>
+                <div @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
+                <div @click="logEvidence(e, true)">Yes</div>
+                <div @click="logEvidence(e, false)">No</div>
+              </li>
             </ul>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
             <ul>
-              <li v-for="g of possibleGhosts" :key="g">{{g}}</li>
+              <li v-for="g of possibleGhosts" :key="g">
+                <div>{{g}}</div>
+                <div>
+                  <div v-for="e of ghostsToEvidences.get(g)" :key="e">{{e}}</div>
+                </div>
+                <div @click="denyGhost(g)">Rule out</div>
+                <div @click="affirmGhost(g)">Rule in</div>
+              </li>
             </ul>
           </div>
         </div>
