@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-    "downlevelIteration": true
-  }
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "removeComments": false
+  },
+  "exclude": ["node_modules"]
 }

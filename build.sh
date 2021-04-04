@@ -1,4 +1,11 @@
-tsc;
+tsc > /dev/null;
 cd build;
+node pre.js;
+tsc > /dev/null;
 node .;
-cd ..
+cd ..;
+rm index.js;
+rm build/pre.js;
+rm build/index.js;
+rm index.temp.ts;
+rm index.temp.js;

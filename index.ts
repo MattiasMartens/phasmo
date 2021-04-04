@@ -11,7 +11,7 @@ const Vue = {
   computed,
   unref
 }
-// @begin
+/**/"@begin"/**/
 /**
  * Imported
  */
@@ -73,7 +73,7 @@ function mapCollectInto<K, T, V, P extends Map<K, V>>(
  * 3. The key where the output will be entered.
  * @returns The newly created Map. 
  */
-export function mapCollect<K, T>(
+function mapCollect<K, T>(
   iterable: Iterable<[K, T]>
 ): Map<K, T>
 /**
@@ -91,7 +91,7 @@ export function mapCollect<K, T>(
  * 3. The key where the output will be entered.
  * @returns The newly created Map. 
  */
-export function mapCollect<K, T, V>(
+function mapCollect<K, T, V>(
   iterable: Iterable<[K, T]>,
   reconcileFn: Reconciler<K, T, V>
 ): Map<K, V>
@@ -110,7 +110,7 @@ export function mapCollect<K, T, V>(
  * 3. The key where the output will be entered.
  * @returns The newly created Map. 
  */
-export function mapCollect<K, T, V>(
+function mapCollect<K, T, V>(
   iterable: Iterable<[K, T]>,
   reconcileFn?: Reconciler<K, T, V>
 ) {
@@ -133,7 +133,7 @@ function* flatMap<T, V>(arr: Iterable<T>, fn: (t: T) => Iterable<V>) {
  * @param {Function} mapFn? A function to call on the inputs.
  * @returns {Reconciler} A Reconciler that combines input values into an Array.
  */
-export function reconcileAppend<T, V, K>(
+function reconcileAppend<T, V, K>(
   mapFn?: (val: T) => unknown extends V ? T : V
 ): Reconciler<K, T, (unknown extends V ? T : V)[]> {
   if (mapFn) {
@@ -204,7 +204,7 @@ function first<T>(arr: Iterable<T>) {
  * Any iterable of entries, regardless of origin.
  * Note that `Map<K, V>` is in this type.
  */
-export type MapEnumeration<K, V> = Iterable<[K, V]>;
+type MapEnumeration<K, V> = Iterable<[K, V]>;
 
 
 /**
@@ -214,7 +214,7 @@ export type MapEnumeration<K, V> = Iterable<[K, V]>;
  * @param {Function} mapper A function mapping the values of the Map to a transformed value.
  * @returns An iterable representing the entries of a map from key to the transformed value.
  */
-export function mapValues<K, T, V>(
+function mapValues<K, T, V>(
   iterable: Iterable<[K, T]>,
   mapper: (value: T, key: K) => V
 ): MapEnumeration<K, V> {
@@ -229,7 +229,7 @@ export function mapValues<K, T, V>(
  * @param  {Function} substitute The function to call on `key` if the value is not present.
  * @returns the value at `key` in `map` if that value exists, the result of calling `substitute` otherwise.
  */
-export function getOrElse<T, V, W>(
+function getOrElse<T, V, W>(
   map: Map<T, V>,
   key: T,
   substitute: (key: T) => W
