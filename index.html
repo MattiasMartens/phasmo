@@ -136,15 +136,14 @@
       position: relative;
       width: 100%;
       min-height: 1px;
-      padding-right: 1em;
-      padding-left: 1em;
       flex-basis: 0;
       flex-grow: 1;
       max-width: 100%;
     }
 
-    .loggable-evidence--item {
-      padding: 0.25em 1em;
+    .loggable-evidence--item,
+    .logged-evidence--item {
+      padding: 0 1em;
     }
 
     .loggable-evidence--info {
@@ -177,6 +176,65 @@
       max-width: 35em;
       border: 1px solid #554b46;
       border-radius: 8px;
+      --yes: green;
+      --yes-preview: green;
+      --yes-background: green;
+      --no: red;
+      --no-preview: red;
+      --no-background: red;
+    }
+
+    .evidence-box {
+      border: 1px solid transparent;
+    }
+
+    .evidence-box.evidence-box__yes {
+      background-color: var(--yes-background);
+      border-color: var(--yes);
+    }
+
+    .evidence-control--yes.ghost-control__active {
+      color: var(--yes);
+      border-color: var(--yes);
+    }
+
+    .evidence-control--yes.ghost-control__active .glyph {
+      fill: var(--yes);
+    }
+
+    .evidence-box.evidence-box__no {
+      background-color: var(--no-background);
+      border-color: var(--no);
+    }
+
+    .evidence-control--no.ghost-control__active {
+      color: var(--no);
+      border-color: var(--no);
+    }
+
+    .evidence-control--no.ghost-control__active .glyph {
+      fill: var(--no);
+    }
+
+    .evidence-box {
+      border: 1px solid transparent;
+    }
+
+    .evidence-box.evidence-box__yes {
+      background-color: var(--yes-background);
+      border-color: var(--yes);
+    }
+
+    .evidence-box.evidence-box__no {
+      background-color: var(--no-background);
+      border-color: var(--no);
+    }
+
+    .evidence-control__active {
+      border-bottom: 1px solid white;
+      position: relative;
+      margin-top: -1px;
+      top: 1px;
     }
 
     .section--evidence .row:first-child {
@@ -213,6 +271,44 @@
       margin-bottom: 1.5em;
       border: 1px solid #554b46;
       border-radius: 8px;
+      --rule-out: red;
+      --rule-out-background: red;
+      --rule-out-preview: red;
+      --rule-in: green;
+      --rule-in-background: green;
+      --rule-in-preview: green;
+    }
+
+    .ghost-box {
+      border: 1px solid transparent;
+    }
+
+    .ghost-box.evidence-box__rule-out {
+      background-color: var(--rule-out-background);
+      border-color: var(--rule-out);
+    }
+
+    .ghost-box.evidence-box__rule-in {
+      background-color: var(--rule-in-background);
+      border-color: var(--rule-in);
+    }
+
+    .ghost-control--rule-in.ghost-control__active {
+      color: var(--rule-in);
+      border-color: var(--rule-in);
+    }
+
+    .ghost-control--rule-in.ghost-control__active .glyph {
+      fill: var(--rule-in);
+    }
+
+    .ghost-control--rule-out.ghost-control__active {
+      color: var(--rule-out);
+      border-color: var(--rule-out);
+    }
+
+    .ghost-control--rule-out.ghost-control__active .glyph {
+      fill: var(--rule-out);
     }
 
     .section--ghosts .row:first-child {
@@ -223,6 +319,15 @@
     .section--ghosts .row:last-child {
       background-color: #191615;
       border-radius: 0 0 8px 8px;
+    }
+
+    .section--ghosts .ghost--control {
+      margin-top: 0.25em;
+    }
+
+    .ghost--item {
+      padding-left: 1em;
+      padding-right: 1em;
     }
 
     .ghost--evidences {
@@ -244,6 +349,19 @@
     .ghost--item {
       margin-bottom: 1em;
     }
+
+    .ghost-control,
+    .evidence-control {
+      margin-bottom: 0.0625em;
+      padding-right: 0.125em;
+    }
+
+    .ghost-control__active {
+      border-bottom: 1px solid white;
+      position: relative;
+      margin-top: -1px;
+      top: 1px;
+    }
   </style>
 </head>
 
@@ -258,22 +376,21 @@
     width: 0.75em;
     fill: white;
     display: inline-block;
-    margin-left: 0.25em;
-    margin-right: 0.25em;
+    margin-right: 0.125em;
   }
 
   .glyph.cross {
     height: 0.65em;
     width: 0.65em;
-    margin-left: 0.35em;
-    margin-right: 0.35em;
+    margin-left: 0.1em;
+    margin-right: 0.225em;
   }
 
   .glyph.lock {
     height: 0.72em;
     width: 0.72em;
-    margin-left: 0.33em;
-    margin-right: 0.25em;
+    margin-left: 0.085em;
+    margin-right: 0.125em;
   }
 </style>
 

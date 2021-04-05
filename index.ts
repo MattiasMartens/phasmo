@@ -513,7 +513,7 @@ Vue.createApp(
             ([, b]) => b !== undefined
           ),
           first
-        )]
+        )].sort(scalarSort(e => -Number(evidenceCheckState.get(e))))
       )
 
       const possibleEvidences = Vue.computed(
@@ -560,6 +560,55 @@ Vue.createApp(
         ghostCheckState.clear()
       }
 
+      const cssClassMethods = {
+        evidenceBoxClass(
+          e: Evidence
+        ) {
+          const state = evidenceCheckState.get(e)
+
+          return {
+            'evidence-box': true,
+            'evidence-box__yes': state === true,
+            'evidence-box__no': state === false
+          }
+        },
+        evidenceControlClass(
+          e: Evidence,
+          controlType: 'yes' | 'no' | 'clear'
+        ) {
+          const isActive = controlType !== 'clear' && (evidenceCheckState.get(e) === (controlType === 'yes'))
+
+          return {
+            'evidence-control': true,
+            [`evidence-control--${controlType}`]: true,
+            'evidence-control__active': isActive
+          }
+        },
+        ghostBoxClass(
+          g: Ghost
+        ) {
+          const state = ghostCheckState.get(g)
+
+          return {
+            'ghost-box': true,
+            'ghost-box__rule-in': state === true,
+            'ghost-box__rule-out': state === false
+          }
+        },
+        ghostControlClass(
+          g: Ghost,
+          controlType: 'rule-out' | 'rule-in'
+        ) {
+          const isActive = ghostCheckState.get(g) === (controlType === 'rule-in')
+
+          return {
+            'ghost-control': true,
+            [`ghost-control--${controlType}`]: true,
+            'ghost-control__active': isActive
+          }
+        }
+      }
+
       return {
         possibleGhosts,
         ghostCheckState,
@@ -575,7 +624,8 @@ Vue.createApp(
         delogEvidence,
         affirmGhost,
         denyGhost,
-        uncheckGhost
+        uncheckGhost,
+        ...cssClassMethods
       }
     },
     template: `
@@ -601,24 +651,24 @@ Vue.createApp(
         <div class="section--evidence">
           <div class="row">
             <div class="col logged-evidence">
-              <div v-for="e of loggedEvidences" class="logged-evidence--item" :key="e">
+              <div v-for="e of loggedEvidences" class="logged-evidence--item" :class="evidenceBoxClass(e)" :key="e">
                 <div class="logged-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
                 <div class="logged-evidence--control">
-                  <div @click="logEvidence(e, true)" class="logged-evidence--control-item"><Checkmark />Yes</div>
-                  <div @click="logEvidence(e, false)" class="logged-evidence--control-item"><Cross />No</div>
-                  <div @click="delogEvidence(e)" class="logged-evidence--control-item"><Move />Clear</div>
+                  <div @click="logEvidence(e, true)" class="logged-evidence--control-item" :class="evidenceControlClass(e, 'yes')"><Checkmark />Yes</div>
+                  <div @click="logEvidence(e, false)" class="logged-evidence--control-item" :class="evidenceControlClass(e, 'no')"><Cross />No</div>
+                  <div @click="delogEvidence(e)" class="logged-evidence--control-item" :class="evidenceControlClass(e, 'clear')"><Move />Clear</div>
                 </div>
               </div>
             </div>
             <div class="col loggable-evidence">
-              <div v-for="e of possibleEvidences" class="loggable-evidence--item" :key="e">
+              <div v-for="e of possibleEvidences" class="loggable-evidence--item" :class="evidenceBoxClass(e)" :key="e">
                 <div class="loggable-evidence--info">
-                  <div class="loggable-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
-                  <div class="loggable-evidence--probability" @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
+                  <div class="loggable-evidence--name">{{e}}</div>
+                  <div class="loggable-evidence--probability">{{evidenceProbabilities.get(e)}}</div>
                 </div>
                 <div class="loggable-evidence--control">
-                  <div @click="logEvidence(e, true)" class="loggable-evidence--control-item"><Checkmark /> Yes</div>
-                  <div @click="logEvidence(e, false)" class="loggable-evidence--control-item"><Cross /> No</div>
+                  <div @click="logEvidence(e, true)" class="loggable-evidence--control-item" :class="evidenceControlClass(e, 'yes')"><Checkmark /> Yes</div>
+                  <div @click="logEvidence(e, false)" class="loggable-evidence--control-item" :class="evidenceControlClass(e, 'no')"><Cross /> No</div>
                 </div>
               </div>
             </div>
@@ -637,7 +687,7 @@ Vue.createApp(
         <div class="section--ghosts">
           <div class="row">
             <div class="col">
-              <div v-for="g of possibleGhosts" class="ghost--item" :key="g">
+              <div v-for="g of possibleGhosts" class="ghost--item" :class="ghostBoxClass(g)" :key="g">
                 <div class="ghost--info">
                   <div class="ghost--name">{{g}}</div>
                   <div class="ghost--evidences">
@@ -645,8 +695,8 @@ Vue.createApp(
                   </div>
                 </div>
                 <div class="ghost--control">
-                  <div @click="denyGhost(g)" class="ghost--control-item"><Cross />Rule out</div>
-                  <div @click="affirmGhost(g)" class="ghost--control-item"><Lock />Rule in</div>
+                  <div @click="denyGhost(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-out')"><Cross />Rule out</div>
+                  <div @click="affirmGhost(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-in')"><Lock />Rule in</div>
                 </div>
               </div>
             </div>
