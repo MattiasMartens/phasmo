@@ -2,14 +2,16 @@ import {
   createApp,
   reactive,
   computed,
-  unref
+  unref,
+  defineComponent
 } from 'vue'
 
 const Vue = {
   createApp,
   reactive,
   computed,
-  unref
+  unref,
+  defineComponent
 }
 /**/"@begin"/**/
 /**
@@ -358,8 +360,61 @@ const evidenceList: Evidence[] = [
 
 const evidencesToGhosts = invertBinMap(ghostsToEvidences)
 
+const Cross = Vue.defineComponent({
+  template: `
+  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve" class="glyph cross">
+  <g>
+    <g>
+      <g>
+        <rect x="-11.8" y="30" transform="matrix(0.7071 0.7071 -0.7071 0.7071 32 -13.2548)" width="87.7" height="4"/>
+      </g>
+    </g>
+    <g>
+      <g>
+        <rect x="30" y="-11.8" transform="matrix(0.7071 0.7071 -0.7071 0.7071 32 -13.2548)" width="4" height="87.7"/>
+      </g>
+    </g>
+  </g>
+  </svg>
+  `
+})
+
+const Checkmark = Vue.defineComponent({
+  template: `
+  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve" class="glyph">
+  <g>
+    <g>
+      <g>
+        <polygon points="21.1,58.6 0.3,38.9 5.7,33.1 20.9,47.4 58.1,8.2 63.9,13.8 			"/>
+      </g>
+    </g>
+  </g>
+  </svg>
+  `
+})
+
+const Move = Vue.defineComponent({
+  template: `
+  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+     viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve" class="glyph">
+  <g>
+    <g>
+      <path d="M64,27L37,0v13C16.1,14.1,0,31.8,0,53.7V64c5.9-14.7,20.1-25,36.5-25H37v14.6L64,27z"/>
+    </g>
+  </g>
+  </svg>
+  `
+})
+
 Vue.createApp(
   {
+    components: {
+      Cross,
+      Checkmark,
+      Move
+    },
     setup() {
       const evidenceCheckState: Map<Evidence, Possible<Boolean>> = Vue.reactive(new Map())
 
@@ -431,7 +486,7 @@ Vue.createApp(
         () => mapCollect(mapValues(
           Vue.unref(evidencePossibleScenarioCount),
           v => {
-            const probability = v / Vue.unref(possibleGhostsRefinedByCheckbox).length
+            const probability = v / (Vue.unref(possibleGhostsRefinedByCheckbox).length || 1)
             return (probability * 100).toFixed(2) + '%'
           }
         ))
@@ -501,43 +556,49 @@ Vue.createApp(
     },
     template: `
       <div class="container">
-        <div class="row">
-          <div @click="newGame">New Game</div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <ul>
-              <li v-for="e of loggedEvidences" :key="e">
-                <div @click="logEvidence(e, true)">{{e}}</div>
-                <div @click="logEvidence(e, true)">Yes</div>
-                <div @click="logEvidence(e, false)">No</div>
-                <div @click="delogEvidence(e)">Clear</div>
-              </li>
-            </ul>
-          </div>
-          <div class="col-6">
-            <ul>
-              <li v-for="e of possibleEvidences" @click="logEvidence(e, true)" :key="e">
-                <div @click="logEvidence(e, true)">{{e}}</div>
-                <div @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
-                <div @click="logEvidence(e, true)">Yes</div>
-                <div @click="logEvidence(e, false)">No</div>
-              </li>
-            </ul>
+        <div class="row section--top">
+          <div class="col">
+            <div @click="newGame" class="btn btn-primary">New Game</div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <ul>
-              <li v-for="g of possibleGhosts" :key="g">
-                <div>{{g}}</div>
-                <div>
+        <div class="row section--evidence">
+          <div class="col logged-evidence">
+            <div v-for="e of loggedEvidences" class="logged-evidence--item" :key="e">
+              <div class="logged-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
+              <div class="logged-evidence--control">
+                <div @click="logEvidence(e, true)" class="logged-evidence--control-item"><Checkmark />Yes</div>
+                <div @click="logEvidence(e, false)" class="logged-evidence--control-item"><Cross />No</div>
+                <div @click="delogEvidence(e)" class="logged-evidence--control-item"><Move />Clear</div>
+              </div>
+            </div>
+          </div>
+          <div class="col loggable--evidence">
+            <div v-for="e of possibleEvidences" class="loggable-evidence--item" :key="e">
+              <div class="loggable-evidence--info">
+                <div class="loggable-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
+                <div class="loggable-evidence--probability" @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
+              </div>
+              <div class="loggable-evidence--control">
+                <div @click="logEvidence(e, true)" class="loggable-evidence--control-item"><Checkmark /> Yes</div>
+                <div @click="logEvidence(e, false)" class="loggable-evidence--control-item"><Cross /> No</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row section--ghosts">
+          <div class="col">
+            <div v-for="g of possibleGhosts" class="ghost--item" :key="g">
+              <div class="ghost--info">
+                <div class="ghost--name">{{g}}</div>
+                <div class="ghost--evidences">
                   <div v-for="e of ghostsToEvidences.get(g)" :key="e">{{e}}</div>
                 </div>
-                <div @click="denyGhost(g)">Rule out</div>
-                <div @click="affirmGhost(g)">Rule in</div>
-              </li>
-            </ul>
+              </div>
+              <div class="ghost--control">
+                <div @click="denyGhost(g)" class="ghost--control-item"><Cross />Rule out</div>
+                <div @click="affirmGhost(g)" class="ghost--control-item">Rule in</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
