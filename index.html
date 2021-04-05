@@ -8,9 +8,35 @@
   <script src="https://unpkg.com/vue@next"></script>
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Gentium+Basic&display=swap" rel="stylesheet">
+  <style id="font">
+    @font-face {
+      font-family: 'October-Crow';
+      src: local('October-Crow'),
+        url('/October\ Crow.woff') format('woff'),
+        url('/October\ Crow.ttf') format('truetype');
+      font-weight: normal;
+    }
+  </style>
   <style>
     * {
       font-family: 'Ubuntu', sans-serif;
+    }
+
+    h1 {
+      font-family: 'October-Crow', 'Ubuntu', sans-serif;
+      font-weight: normal !important;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-family: 'Gentium Basic';
+    }
+
+    h1,
+    h2 {
+      text-align: center;
     }
 
     /* Dusty pink #dcae96; */
@@ -110,7 +136,7 @@
     }
 
     .section--evidence .col {
-      min-height: 10em;
+      min-height: 15em;
     }
 
     .loggable-evidence--item {
@@ -161,7 +187,7 @@
       justify-content: space-between;
     }
 
-    .section--top {
+    .section--content-top {
       margin: auto;
       max-width: 35em;
       margin-bottom: 0.5em;
@@ -196,9 +222,9 @@
   }
 
   .glyph.lock {
-    height: 0.70em;
-    width: 0.70em;
-    margin-left: 0.35em;
+    height: 0.71em;
+    width: 0.71em;
+    margin-left: 0.34em;
     margin-right: 0.25em;
   }
 </style>

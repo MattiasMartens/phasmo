@@ -552,6 +552,14 @@ Vue.createApp(
         evidenceCheckState.clear()
       }
 
+      const resetEvidence = () => {
+        evidenceCheckState.clear()
+      }
+
+      const resetGhosts = () => {
+        ghostCheckState.clear()
+      }
+
       return {
         possibleGhosts,
         ghostCheckState,
@@ -561,18 +569,34 @@ Vue.createApp(
         evidenceProbabilities,
         ghostsToEvidences,
         newGame,
+        resetEvidence,
+        resetGhosts,
         logEvidence,
         delogEvidence,
         affirmGhost,
         denyGhost,
-        uncheckGhost,
+        uncheckGhost
       }
     },
     template: `
       <div class="container">
         <div class="row section--top">
           <div class="col">
+            <h1>Phasmophobia Eliminator</h1>
+            <h2>Rule out evidence and ghosts to identify your target.</h2>
+          </div>
+        </div>
+        <div class="row section--content-top">
+          <div class="col">
             <div @click="newGame" class="btn btn-primary">New Game</div>
+          </div>
+        </div>
+        <div class="row evidence--header">
+          <div class="col">
+            <h2>
+              Evidence
+              <div @click="resetEvidence" class="btn btn-secondary"><Move /> Reset</div>
+            </h2>
           </div>
         </div>
         <div class="row section--evidence">
@@ -597,6 +621,14 @@ Vue.createApp(
                 <div @click="logEvidence(e, false)" class="loggable-evidence--control-item"><Cross /> No</div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="row ghost--header">
+          <div class="col">
+            <h2>
+              Possible Ghosts
+              <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear Rules</div>
+            </h2>
           </div>
         </div>
         <div class="row section--ghosts">
