@@ -408,12 +408,26 @@ const Move = Vue.defineComponent({
   `
 })
 
+const Lock = Vue.defineComponent({
+  template: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+  viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve" class="glyph lock">
+    <g>
+      <g>
+        <path d="M52,24h-3v-7c0-9.4-7.6-17-17-17S15,7.6,15,17v7h-3c-2.2,0-4,1.8-4,4v32c0,2.2,1.8,4,4,4h40c2.2,0,4-1.8,4-4V28
+          C56,25.8,54.2,24,52,24z M32,55L32,55c-1.1,0-2-0.9-2-2v-4.6c-1.7-1.1-2.9-3.3-1.2-5.6c0.8-1.1,2-1.8,3.3-1.8c2.2,0,3.9,1.8,3.9,4
+          c0,1.4-0.9,2.6-2,3.4V53C34,54.1,33.1,55,32,55z M41,24H23v-7c0-5,4-9,9-9s9,4,9,9V24z"/>
+      </g>
+    </g>
+  </svg>`
+})
+
 Vue.createApp(
   {
     components: {
       Cross,
       Checkmark,
-      Move
+      Move,
+      Lock
     },
     setup() {
       const evidenceCheckState: Map<Evidence, Possible<Boolean>> = Vue.reactive(new Map())
@@ -596,7 +610,7 @@ Vue.createApp(
               </div>
               <div class="ghost--control">
                 <div @click="denyGhost(g)" class="ghost--control-item"><Cross />Rule out</div>
-                <div @click="affirmGhost(g)" class="ghost--control-item">Rule in</div>
+                <div @click="affirmGhost(g)" class="ghost--control-item"><Lock />Rule in</div>
               </div>
             </div>
           </div>
