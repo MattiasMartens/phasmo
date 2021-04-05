@@ -51,7 +51,7 @@
     .btn {
       --btn-text-color: #fff;
       --btn-fill-color: #036b0c;
-      --btn-border-color: #036b0c;
+      --btn-border-color: transparent;
       --btn-hover-text-color: #fff;
       --btn-hover-fill-color: #05460a;
       --btn-hover-border-color: #04590b;
@@ -60,10 +60,16 @@
       --btn-click-border-color: #024d09;
     }
 
-    .btn {
-      color: var(--btn-text-color);
-      background-color: var(--btn-fill-color);
-      border-color: var(--btn-border-color);
+    .btn.btn-secondary {
+      --btn-text-color: #fff;
+      --btn-fill-color: #032706;
+      --btn-border-color: #036b0c;
+      --btn-hover-text-color: #fff;
+      --btn-hover-fill-color: #065e0d;
+      --btn-hover-border-color: #059411;
+      --btn-click-text-color: #fff;
+      --btn-click-fill-color: #046b0d;
+      --btn-click-border-color: #08bb17;
     }
 
     .btn:not(:disabled):not(.disabled).active,
@@ -89,11 +95,13 @@
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
-      border: 1px solid transparent;
+      border: 1px solid var(--btn-border-color);
       padding: .375rem .75rem;
       font-size: 1rem;
       line-height: 1.5;
       border-radius: .25rem;
+      color: var(--btn-text-color);
+      background-color: var(--btn-fill-color);
       transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     }
 
@@ -112,8 +120,8 @@
     }
 
     .container {
+      margin: 0 1em;
       margin-top: 0.25em;
-      width: 100%;
     }
 
     .row {
@@ -133,10 +141,6 @@
       flex-basis: 0;
       flex-grow: 1;
       max-width: 100%;
-    }
-
-    .section--evidence .col {
-      min-height: 15em;
     }
 
     .loggable-evidence--item {
@@ -169,12 +173,56 @@
 
     .section--evidence {
       margin: auto;
+      margin-bottom: 1.5em;
       max-width: 35em;
+      border: 1px solid #554b46;
+      border-radius: 8px;
+    }
+
+    .section--evidence .row:first-child {
+      border-bottom: 1px solid #705d54;
+    }
+
+    .section--evidence .row:last-child {
+      background-color: #191615;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .evidence--header h2,
+    .ghost--header h2 {
+      margin-bottom: 0.0625em;
+    }
+
+    .logged-evidence {
+      border-right: 1px solid #705d54;
+    }
+
+    .logged-evidence,
+    .loggable-evidence {
+      padding-top: 0.5em;
+    }
+
+    .section--evidence .btn,
+    .section--ghosts .btn {
+      margin: 0.25em;
     }
 
     .section--ghosts {
       margin: auto;
       max-width: 20em;
+      margin-bottom: 1.5em;
+      border: 1px solid #554b46;
+      border-radius: 8px;
+    }
+
+    .section--ghosts .row:first-child {
+      padding-top: 0.75em;
+      border-bottom: 1px solid #705d54;
+    }
+
+    .section--ghosts .row:last-child {
+      background-color: #191615;
+      border-radius: 0 0 8px 8px;
     }
 
     .ghost--evidences {
@@ -222,9 +270,9 @@
   }
 
   .glyph.lock {
-    height: 0.71em;
-    width: 0.71em;
-    margin-left: 0.34em;
+    height: 0.72em;
+    width: 0.72em;
+    margin-left: 0.33em;
     margin-right: 0.25em;
   }
 </style>

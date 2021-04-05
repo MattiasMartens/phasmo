@@ -595,56 +595,64 @@ Vue.createApp(
           <div class="col">
             <h2>
               Evidence
-              <div @click="resetEvidence" class="btn btn-secondary"><Move /> Reset</div>
             </h2>
           </div>
         </div>
-        <div class="row section--evidence">
-          <div class="col logged-evidence">
-            <div v-for="e of loggedEvidences" class="logged-evidence--item" :key="e">
-              <div class="logged-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
-              <div class="logged-evidence--control">
-                <div @click="logEvidence(e, true)" class="logged-evidence--control-item"><Checkmark />Yes</div>
-                <div @click="logEvidence(e, false)" class="logged-evidence--control-item"><Cross />No</div>
-                <div @click="delogEvidence(e)" class="logged-evidence--control-item"><Move />Clear</div>
+        <div class="section--evidence">
+          <div class="row">
+            <div class="col logged-evidence">
+              <div v-for="e of loggedEvidences" class="logged-evidence--item" :key="e">
+                <div class="logged-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
+                <div class="logged-evidence--control">
+                  <div @click="logEvidence(e, true)" class="logged-evidence--control-item"><Checkmark />Yes</div>
+                  <div @click="logEvidence(e, false)" class="logged-evidence--control-item"><Cross />No</div>
+                  <div @click="delogEvidence(e)" class="logged-evidence--control-item"><Move />Clear</div>
+                </div>
+              </div>
+            </div>
+            <div class="col loggable-evidence">
+              <div v-for="e of possibleEvidences" class="loggable-evidence--item" :key="e">
+                <div class="loggable-evidence--info">
+                  <div class="loggable-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
+                  <div class="loggable-evidence--probability" @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
+                </div>
+                <div class="loggable-evidence--control">
+                  <div @click="logEvidence(e, true)" class="loggable-evidence--control-item"><Checkmark /> Yes</div>
+                  <div @click="logEvidence(e, false)" class="loggable-evidence--control-item"><Cross /> No</div>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col loggable--evidence">
-            <div v-for="e of possibleEvidences" class="loggable-evidence--item" :key="e">
-              <div class="loggable-evidence--info">
-                <div class="loggable-evidence--name" @click="logEvidence(e, true)">{{e}}</div>
-                <div class="loggable-evidence--probability" @click="logEvidence(e, true)">{{evidenceProbabilities.get(e)}}</div>
-              </div>
-              <div class="loggable-evidence--control">
-                <div @click="logEvidence(e, true)" class="loggable-evidence--control-item"><Checkmark /> Yes</div>
-                <div @click="logEvidence(e, false)" class="loggable-evidence--control-item"><Cross /> No</div>
-              </div>
-            </div>
+          <div class="row">
+            <div @click="resetEvidence" class="btn btn-secondary"><Move /> Clear Evidence</div>
           </div>
         </div>
         <div class="row ghost--header">
           <div class="col">
             <h2>
               Possible Ghosts
-              <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear Rules</div>
             </h2>
           </div>
         </div>
-        <div class="row section--ghosts">
-          <div class="col">
-            <div v-for="g of possibleGhosts" class="ghost--item" :key="g">
-              <div class="ghost--info">
-                <div class="ghost--name">{{g}}</div>
-                <div class="ghost--evidences">
-                  <div v-for="e of ghostsToEvidences.get(g)" :key="e">{{e}}</div>
+        <div class="section--ghosts">
+          <div class="row">
+            <div class="col">
+              <div v-for="g of possibleGhosts" class="ghost--item" :key="g">
+                <div class="ghost--info">
+                  <div class="ghost--name">{{g}}</div>
+                  <div class="ghost--evidences">
+                    <div v-for="e of ghostsToEvidences.get(g)" :key="e">{{e}}</div>
+                  </div>
+                </div>
+                <div class="ghost--control">
+                  <div @click="denyGhost(g)" class="ghost--control-item"><Cross />Rule out</div>
+                  <div @click="affirmGhost(g)" class="ghost--control-item"><Lock />Rule in</div>
                 </div>
               </div>
-              <div class="ghost--control">
-                <div @click="denyGhost(g)" class="ghost--control-item"><Cross />Rule out</div>
-                <div @click="affirmGhost(g)" class="ghost--control-item"><Lock />Rule in</div>
-              </div>
             </div>
+          </div>
+          <div class="row">
+            <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear Rules</div>
           </div>
         </div>
       </div>
