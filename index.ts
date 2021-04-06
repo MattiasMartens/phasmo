@@ -333,6 +333,14 @@ function scalarSort<T>(fn: (t: T) => string | number) {
   }
 }
 
+function countIterable<T>(arr: Iterable<T>, condition: (t: T) => boolean = () => true) {
+  let inc = 0
+  for (const t of arr) {
+    condition(t) && inc++
+  }
+  return inc
+}
+
 function existIterable<T>(arr: Iterable<T>, condition: (t: T) => boolean = () => true) {
   for (const t of arr) {
     if (condition(t)) {
@@ -734,6 +742,14 @@ Vue.createApp(
         ].includes(g[0]) ? 'an' : 'a'
       }
 
+      const suggestRuleIn = Vue.computed(
+        () => Vue.unref(isGhostDetermined) && (ghostCheckState.get(Vue.unref(ghostDetermined)) === true) && existIterable(
+          Vue.unref(possibleGhosts),
+          g => g !== Vue.unref(ghostDetermined) && (ghostCheckState.get(g) !== false
+          )
+        )
+      )
+
       return {
         article,
         possibleGhosts,
@@ -757,6 +773,7 @@ Vue.createApp(
         toggleGhostDenied,
         uncheckGhost,
         clearExclusions,
+        suggestRuleIn,
         ...cssClassMethods
       }
     },
@@ -820,7 +837,8 @@ Vue.createApp(
           <div class="col">
             <h2 class="final--header" v-if="ghostDetermined">
               The ghost is {{article(ghostDetermined)}}<br />
-              <span class="final-ghost">{{ghostDetermined}}</span>
+              <span class="final-ghost">{{ghostDetermined}}</span><br />
+              <span v-if="suggestRuleIn" class="suggest-rule-in">(…Or, you need to rule in more ghosts.)</span>
             </h2>
             <h2 v-else>
               Possible Ghosts
