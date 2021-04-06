@@ -798,7 +798,7 @@ Vue.createApp(
       <div class="container">
         <div class="row section--top">
           <div class="col">
-            <h1>Phasmophobia Eliminator</h1>
+            <h1>Phasmophobia: Eliminator</h1>
             <h2>Rule out evidence and ghosts to identify your target.</h2>
           </div>
         </div>
