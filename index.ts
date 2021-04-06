@@ -195,11 +195,26 @@ function* mapIterable<T, V>(iterable: Iterable<T>, mapper: (t: T, i: number) => 
   }
 }
 
-function first<T>(arr: [T, ...any[]]): T
+function forEachIterable<T, V>(iterable: Iterable<T>, mapper: (t: T, i: number) => void): void {
+  let i = 0
+  for (const value of iterable) {
+    mapper(value, i)
+    i++
+  }
+}
+
 function first<T>(arr: Iterable<T>) {
   for (const i of arr) {
     return i
   }
+}
+
+function tupleFirst<T>(tuple: [T, any]) {
+  return tuple[0]
+}
+
+function tupleSecond<T>(tuple: [any, T]) {
+  return tuple[0]
 }
 
 /**
@@ -318,6 +333,15 @@ function scalarSort<T>(fn: (t: T) => string | number) {
   }
 }
 
+function existIterable<T>(arr: Iterable<T>, condition: (t: T) => boolean = () => true) {
+  for (const t of arr) {
+    if (condition(t)) {
+      return true
+    }
+  }
+  return false
+}
+
 function fromIterableSorted<T>(iterable: Iterable<T>, sortFn: (t1: T, t2: T) => number): T[] {
   const retArr: T[] = []
   for (const item of iterable) {
@@ -421,21 +445,58 @@ const Lock = Vue.defineComponent({
   </svg>`
 })
 
+const PossibleEvidenceIsEmpty = Vue.defineComponent({
+  props: {
+    isGhostDetermined: Boolean,
+    areExclusions: Boolean,
+    clearExclusions: Function as any as () => () => void,
+    reset: Function as any as () => void
+  },
+  template: `<div v-if="isGhostDetermined" class="possible-evidence-is-empty" >
+    Done
+    <div @click="reset" class="btn btn-primary">Reset</div>
+  </div>
+  <div v-else-if="areExclusions" class="possible-evidence-is-empty">
+    <div>No possible evidence types remain. Maybe something was incorrectly ruled out?</div> <div @click="clearExclusions" class="btn btn-secondary">Reset excluded cases</div>
+  </div>
+  <div v-else class="possible-evidence-is-empty">No possible evidence types remain. <div @click="reset" class="btn btn-primary">Reset All</div></div>`
+})
+
+const GhostConclusion = Vue.defineComponent({
+  props: {
+    ghostDetermined: String as () => Ghost,
+    isRemainingPossibleGhost: Boolean,
+    isRemainingPossiblePreRuleOutGhost: Boolean,
+    areExclusions: Boolean,
+    clearExclusions: Function as any as () => () => void,
+    reset: Function as any as () => void
+  },
+  template: `<div v-if="ghostDetermined" class="ghost-determined-reset"><div @click="reset" class="btn btn-primary">Reset</div></div>
+  <span v-else-if="isRemainingPossiblePreRuleOutGhost" />
+  <div v-else-if="areExclusions" class="ghost-conclusion">
+    <div>No possible ghosts remain. Maybe something was incorrectly ruled out?</div>
+    <div @click="clearExclusions" class="btn btn-secondary">Reset excluded cases</div>
+  </div>
+  <div v-else class="ghost-conclusion">No possible ghosts remain. <div @click="reset" class="btn btn-primary">Reset All</div></div>`
+})
+
 Vue.createApp(
   {
     components: {
       Cross,
       Checkmark,
       Move,
-      Lock
+      Lock,
+      PossibleEvidenceIsEmpty,
+      GhostConclusion
     },
     setup() {
-      const evidenceCheckState: Map<Evidence, Possible<Boolean>> = Vue.reactive(new Map())
+      const evidenceCheckState: Map<Evidence, Possible<boolean>> = Vue.reactive(new Map())
 
-      const ghostCheckState: Map<Ghost, Possible<Boolean>> = Vue.reactive(new Map())
+      const ghostCheckState: Map<Ghost, Possible<boolean>> = Vue.reactive(new Map())
 
       const possibleGhosts = Vue.computed(
-        () => [...mapIterable(
+        () => [...mapIterable<[Ghost, [Evidence, Evidence, Evidence]], Ghost>(
           filterIterable(
             ghostsToEvidences,
             ([, evidences]) => {
@@ -450,7 +511,7 @@ Vue.createApp(
               return true
             }
           ),
-          first
+          tupleFirst
         )]
       )
 
@@ -459,7 +520,7 @@ Vue.createApp(
           ghostCheckState,
           ([, check]) => check === true
         ),
-        first
+        tupleFirst
       )])
 
       const deniedGhosts = Vue.computed(() => [...mapIterable(
@@ -467,7 +528,7 @@ Vue.createApp(
           ghostCheckState,
           ([, check]) => check === false
         ),
-        first
+        tupleFirst
       )])
 
       const possibleGhostsRefinedByCheckbox = Vue.computed(
@@ -507,18 +568,18 @@ Vue.createApp(
       )
 
       const loggedEvidences = Vue.computed(
-        () => [...mapIterable(
+        () => [...mapIterable<[Evidence, boolean], Evidence>(
           filterIterable(
             evidenceCheckState,
             ([, b]) => b !== undefined
           ),
-          first
+          tupleFirst
         )].sort(scalarSort(e => -Number(evidenceCheckState.get(e))))
       )
 
       const possibleEvidences = Vue.computed(
         () => fromIterableSorted(
-          without(evidenceList, Vue.unref(loggedEvidences)),
+          filterIterable(evidenceList, e => !Vue.unref(loggedEvidences).includes(e) && !!getOrFail(Vue.unref(evidencePossibleScenarioCount), e)),
           scalarSort(e => -getOrFail(
             Vue.unref(evidencePossibleScenarioCount),
             e
@@ -526,15 +587,25 @@ Vue.createApp(
         )
       )
 
-      const affirmGhost = (g: Ghost) => ghostCheckState.set(
-        g,
-        true
-      )
+      const toggleGhostAffirmed = (g: Ghost) => {
+        const currentState = ghostCheckState.get(g)
 
-      const denyGhost = (g: Ghost) => ghostCheckState.set(
-        g,
-        false
-      )
+        if (currentState === true) {
+          ghostCheckState.delete(g)
+        } else {
+          ghostCheckState.set(g, true)
+        }
+      }
+
+      const toggleGhostDenied = (g: Ghost) => {
+        const currentState = ghostCheckState.get(g)
+
+        if (currentState === false) {
+          ghostCheckState.delete(g)
+        } else {
+          ghostCheckState.set(g, false)
+        }
+      }
 
       const uncheckGhost = (g: Ghost) => ghostCheckState.delete(
         g
@@ -609,7 +680,62 @@ Vue.createApp(
         }
       }
 
+      const isGhostDetermined = Vue.computed(
+        () => Vue.unref(
+          possibleGhostsRefinedByCheckbox
+        ).length === 1
+      )
+
+      const ghostDetermined = Vue.computed(
+        () => Vue.unref(
+          possibleGhostsRefinedByCheckbox
+        ).length === 1 ? first(Vue.unref(possibleGhostsRefinedByCheckbox)) : undefined
+      )
+
+      const isRemainingPossiblePreRuleOutGhost = Vue.computed(
+        () => !!Vue.unref(
+          possibleGhosts
+        ).length
+      )
+
+      const areExclusions = Vue.computed(
+        () => existIterable(
+          evidenceCheckState,
+          ([, checked]) => checked === false
+        ) || existIterable(
+          ghostCheckState,
+          ([, checked]) => checked !== undefined
+        )
+      )
+
+      const clearExclusions = () => {
+        ghostCheckState.clear()
+        forEachIterable(
+          evidenceCheckState,
+          ([e, checkState]) => (checkState === false) && evidenceCheckState.delete(
+            e
+          )
+        )
+      }
+
+      const isRemainingPossibleGhost = Vue.computed(
+        () => !!Vue.unref(
+          possibleGhosts
+        ).length
+      )
+
+      const article = (g: Ghost) => {
+        return [
+          'A',
+          'E',
+          'I',
+          'O',
+          'U'
+        ].includes(g[0]) ? 'an' : 'a'
+      }
+
       return {
+        article,
         possibleGhosts,
         ghostCheckState,
         evidenceCheckState,
@@ -617,14 +743,20 @@ Vue.createApp(
         loggedEvidences,
         evidenceProbabilities,
         ghostsToEvidences,
+        isGhostDetermined,
+        areExclusions,
+        ghostDetermined,
+        isRemainingPossibleGhost,
+        isRemainingPossiblePreRuleOutGhost,
         newGame,
         resetEvidence,
         resetGhosts,
         logEvidence,
         delogEvidence,
-        affirmGhost,
-        denyGhost,
+        toggleGhostAffirmed,
+        toggleGhostDenied,
         uncheckGhost,
+        clearExclusions,
         ...cssClassMethods
       }
     },
@@ -638,7 +770,7 @@ Vue.createApp(
         </div>
         <div class="row section--content-top">
           <div class="col">
-            <div @click="newGame" class="btn btn-primary">New Game</div>
+            <div @click="newGame" class="btn btn-primary">New game</div>
           </div>
         </div>
         <div class="row evidence--header">
@@ -671,15 +803,26 @@ Vue.createApp(
                   <div @click="logEvidence(e, false)" class="loggable-evidence--control-item" :class="evidenceControlClass(e, 'no')"><Cross /> No</div>
                 </div>
               </div>
+              <PossibleEvidenceIsEmpty
+                v-if="!possibleEvidences.length"
+                :isGhostDetermined="isGhostDetermined"
+                :areExclusions="areExclusions"
+                :clearExclusions="clearExclusions"
+                :reset="newGame"
+              />
             </div>
           </div>
           <div class="row">
-            <div @click="resetEvidence" class="btn btn-secondary"><Move /> Clear Evidence</div>
+            <div @click="resetEvidence" class="btn btn-secondary"><Move /> Clear evidence</div>
           </div>
         </div>
         <div class="row ghost--header">
           <div class="col">
-            <h2>
+            <h2 class="final--header" v-if="ghostDetermined">
+              The ghost is {{article(ghostDetermined)}}<br />
+              <span class="final-ghost">{{ghostDetermined}}</span>
+            </h2>
+            <h2 v-else>
               Possible Ghosts
             </h2>
           </div>
@@ -687,6 +830,14 @@ Vue.createApp(
         <div class="section--ghosts">
           <div class="row">
             <div class="col">
+              <GhostConclusion
+                :ghostDetermined="ghostDetermined"
+                :areExclusions="areExclusions"
+                :clearExclusions="clearExclusions"
+                :reset="newGame"
+                :isRemainingPossibleGhost="isRemainingPossibleGhost"
+                :isRemainingPossiblePreRuleOutGhost="isRemainingPossiblePreRuleOutGhost"
+              />
               <div v-for="g of possibleGhosts" class="ghost--item" :class="ghostBoxClass(g)" :key="g">
                 <div class="ghost--info">
                   <div class="ghost--name">{{g}}</div>
@@ -695,14 +846,14 @@ Vue.createApp(
                   </div>
                 </div>
                 <div class="ghost--control">
-                  <div @click="denyGhost(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-out')"><Cross />Rule out</div>
-                  <div @click="affirmGhost(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-in')"><Lock />Rule in</div>
+                  <div @click="toggleGhostDenied(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-out')"><Cross />Rule out</div>
+                  <div @click="toggleGhostAffirmed(g)" class="ghost--control-item" :class="ghostControlClass(g, 'rule-in')"><Lock />Rule in</div>
                 </div>
               </div>
             </div>
           </div>
           <div class="row">
-            <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear Rules</div>
+            <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear rules</div>
           </div>
         </div>
       </div>

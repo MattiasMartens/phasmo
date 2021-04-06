@@ -13,8 +13,7 @@
     @font-face {
       font-family: 'October-Crow';
       src: local('October-Crow'),
-        url('/October\ Crow.woff') format('woff'),
-        url('/October\ Crow.ttf') format('truetype');
+        url('http://phasmo-eliminator.s3-website-us-west-2.amazonaws.com/October%20Crow.ttf') format('truetype');
       font-weight: normal;
     }
   </style>
@@ -232,9 +231,6 @@
 
     .evidence-control__active {
       border-bottom: 1px solid white;
-      position: relative;
-      margin-top: -1px;
-      top: 1px;
     }
 
     .section--evidence .row:first-child {
@@ -258,6 +254,7 @@
     .logged-evidence,
     .loggable-evidence {
       padding-top: 0.5em;
+      padding-bottom: 0.5em;
     }
 
     .section--evidence .btn,
@@ -277,6 +274,38 @@
       --rule-in: green;
       --rule-in-background: green;
       --rule-in-preview: green;
+    }
+
+    .final-ghost {
+      font-family: 'October-Crow';
+      font-weight: normal;
+    }
+
+    .final--header {
+      margin-bottom: 0.25em;
+    }
+
+    .ghost-conclusion {
+      text-align: center;
+      padding-bottom: 0.25em;
+    }
+
+    .ghost-determined-reset {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 1em;
+    }
+
+    .ghost-determined-reset .btn {
+      display: inline-block;
+    }
+
+    .possible-evidence-is-empty {
+      margin-left: 0.25em;
+    }
+
+    .possible-evidence-is-empty .btn {
+      margin-left: 0;
     }
 
     .ghost-box {
@@ -354,13 +383,17 @@
     .evidence-control {
       margin-bottom: 0.0625em;
       padding-right: 0.125em;
+      margin-right: 0.2em;
+      border-bottom: 1px solid transparent;
     }
 
     .ghost-control__active {
       border-bottom: 1px solid white;
-      position: relative;
-      margin-top: -1px;
-      top: 1px;
+    }
+
+    .possible-evidence-is-empty,
+    .ghost-conclusion {
+      padding: 0 0.5em;
     }
   </style>
 </head>
