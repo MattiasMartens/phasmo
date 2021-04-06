@@ -518,7 +518,17 @@ Vue.createApp(
             }
           ),
           tupleFirst
-        )]
+        )].sort(
+          scalarSort(
+            g => {
+              const checkState = ghostCheckState.get(g)
+
+              return checkState === true ? -1
+                : checkState === false ? 1
+                  : 0
+            }
+          )
+        )
       )
 
       const affirmedGhosts = Vue.computed(() => [...mapIterable(
@@ -657,7 +667,7 @@ Vue.createApp(
 
           return {
             'evidence-control': true,
-            [`evidence-control--${controlType}`]: true,
+            [`evidence-control__${controlType}`]: true,
             'evidence-control__active': isActive
           }
         },
@@ -680,7 +690,7 @@ Vue.createApp(
 
           return {
             'ghost-control': true,
-            [`ghost-control--${controlType}`]: true,
+            [`ghost-control__${controlType}`]: true,
             'ghost-control__active': isActive
           }
         }
