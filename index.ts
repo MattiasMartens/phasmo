@@ -3,7 +3,8 @@ import {
   reactive,
   computed,
   unref,
-  defineComponent
+  defineComponent,
+  watch
 } from 'vue'
 
 const Vue = {
@@ -11,7 +12,8 @@ const Vue = {
   reactive,
   computed,
   unref,
-  defineComponent
+  defineComponent,
+  watch
 }
 /**/"@begin"/**/
 /**
@@ -460,10 +462,7 @@ const PossibleEvidenceIsEmpty = Vue.defineComponent({
     clearExclusions: Function as any as () => () => void,
     reset: Function as any as () => void
   },
-  template: `<div v-if="isGhostDetermined" class="possible-evidence-is-empty" >
-    Done
-    <div @click="reset" class="btn btn-primary">Reset</div>
-  </div>
+  template: `<div v-if="isGhostDetermined" class="possible-evidence-is-empty"></div>
   <div v-else-if="areExclusions" class="possible-evidence-is-empty">
     <div>No possible evidence types remain. Maybe something was incorrectly ruled out?</div> <div @click="clearExclusions" class="btn btn-secondary">Reset excluded cases</div>
   </div>
@@ -473,14 +472,13 @@ const PossibleEvidenceIsEmpty = Vue.defineComponent({
 const GhostConclusion = Vue.defineComponent({
   props: {
     ghostDetermined: String as () => Ghost,
-    isRemainingPossibleGhost: Boolean,
-    isRemainingPossiblePreRuleOutGhost: Boolean,
+    isRemainingPossibleRefinedByCheckboxGhost: Boolean,
     areExclusions: Boolean,
     clearExclusions: Function as any as () => () => void,
     reset: Function as any as () => void
   },
   template: `<div v-if="ghostDetermined" class="ghost-determined-reset"><div @click="reset" class="btn btn-primary">Reset</div></div>
-  <span v-else-if="isRemainingPossiblePreRuleOutGhost" />
+  <span v-else-if="isRemainingPossibleRefinedByCheckboxGhost" />
   <div v-else-if="areExclusions" class="ghost-conclusion">
     <div>No possible ghosts remain. Maybe something was incorrectly ruled out?</div>
     <div @click="clearExclusions" class="btn btn-secondary">Reset excluded cases</div>
@@ -700,12 +698,6 @@ Vue.createApp(
         ).length === 1 ? first(Vue.unref(possibleGhostsRefinedByCheckbox)) : undefined
       )
 
-      const isRemainingPossiblePreRuleOutGhost = Vue.computed(
-        () => !!Vue.unref(
-          possibleGhosts
-        ).length
-      )
-
       const areExclusions = Vue.computed(
         () => existIterable(
           evidenceCheckState,
@@ -726,9 +718,9 @@ Vue.createApp(
         )
       }
 
-      const isRemainingPossibleGhost = Vue.computed(
+      const isRemainingPossibleRefinedByCheckboxGhost = Vue.computed(
         () => !!Vue.unref(
-          possibleGhosts
+          possibleGhostsRefinedByCheckbox
         ).length
       )
 
@@ -750,6 +742,22 @@ Vue.createApp(
         )
       )
 
+      Vue.watch(
+        possibleGhosts,
+        (newVal, oldVal) => {
+          const newlyRuledOutByEvidence = without(
+            oldVal,
+            newVal
+          )
+
+          forEachIterable(
+            newlyRuledOutByEvidence,
+            g => ghostCheckState.delete(g)
+          )
+
+        }
+      )
+
       return {
         article,
         possibleGhosts,
@@ -762,8 +770,7 @@ Vue.createApp(
         isGhostDetermined,
         areExclusions,
         ghostDetermined,
-        isRemainingPossibleGhost,
-        isRemainingPossiblePreRuleOutGhost,
+        isRemainingPossibleRefinedByCheckboxGhost,
         newGame,
         resetEvidence,
         resetGhosts,
@@ -853,8 +860,7 @@ Vue.createApp(
                 :areExclusions="areExclusions"
                 :clearExclusions="clearExclusions"
                 :reset="newGame"
-                :isRemainingPossibleGhost="isRemainingPossibleGhost"
-                :isRemainingPossiblePreRuleOutGhost="isRemainingPossiblePreRuleOutGhost"
+                :isRemainingPossibleRefinedByCheckboxGhost="isRemainingPossibleRefinedByCheckboxGhost"
               />
               <div v-for="g of possibleGhosts" class="ghost--item" :class="ghostBoxClass(g)" :key="g">
                 <div class="ghost--info">
