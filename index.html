@@ -40,13 +40,14 @@
       text-align: center;
     }
 
-    /* Dusty pink #dcae96; */
-
     body {
       background-color: rgb(13, 15, 14);
       color: white;
-      user-select: none;
       margin: 0;
+    }
+
+    .container>* {
+      user-select: none;
     }
 
     .btn {
@@ -121,8 +122,11 @@
     }
 
     .container {
-      margin: 0 1em;
       margin-top: 0.25em;
+    }
+
+    .container>.row {
+      margin: 0 1em;
     }
 
     .row {
@@ -309,7 +313,7 @@
     .section--ghosts {
       margin: auto;
       max-width: 20em;
-      margin-bottom: 1.5em;
+      margin-bottom: 3em;
       border: 1px solid #554b46;
       border-radius: 8px;
       --rule-out: rgb(253, 53, 28);
@@ -448,7 +452,7 @@
       justify-content: space-between;
     }
 
-    .section--content-top {
+    #app .section--content-top {
       margin: auto;
       max-width: 35em;
       margin-bottom: 0.5em;
@@ -505,6 +509,45 @@
     width: 0.72em;
     margin-left: 0.085em;
     margin-right: 0.125em;
+  }
+
+  #app .footer,
+  #app .section--top {
+    user-select: initial;
+  }
+
+  #app .footer {
+    padding: 0.5em 1em;
+    background-color: #191d19;
+    font-size: 0.75em;
+    padding-bottom: 0;
+    margin: 0;
+    border-top: 1px solid #939f93;
+  }
+
+  .ko-fi {
+    padding-top: 1.25em;
+  }
+
+  .ko-fi img {
+    padding: 0.5em;
+    padding-bottom: 0;
+  }
+
+  .footer p {
+    margin: 0.25em 0;
+  }
+
+  .footer a {
+    color: #a7f3ad
+  }
+
+  .footer a:visited {
+    color: #66e970
+  }
+
+  .footer ul {
+    margin: 0.25em;
   }
 </style>
 

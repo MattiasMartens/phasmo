@@ -890,6 +890,13 @@ Vue.createApp(
             <div @click="resetGhosts" class="btn btn-secondary"><Move /> Clear rules</div>
           </div>
         </div>
+        <div class="row footer">
+          <div class="col">
+            <p>App by Mattias Martens (<a href="https://www.linkedin.com/in/mattias-martens-4b64a05a/">LinkedIn</a>)</p>
+            <p>Fonts:<ul><li><a href="https://www.1001fonts.com/october-crow-font.html">October Crow</a> by <a href="http://www.sinisterfonts.com/">Chad Savage</a></li><li><a href="https://fonts.google.com/specimen/Gentium+Basic">Gentium Basic</a> by <a href="https://gaultney.org/jvgtype/">Victor Gaultney</a></li><li><a href="https://fonts.google.com/specimen/Ubuntu">Ubuntu</a> by <a href="https://www.daltonmaag.com/">Dalton Maag</a></li></ul></p>
+            <p class="ko-fi">Did the app help you? Think about saying thanks by kicking over a couple bucks on Ko-fi:<br /> <a href="https://ko-fi.com/mattiasmartens" target="_blank"><img :width="125" src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/5cbed8a4cf61ec6d7e012820_BuyMeACoffeeofi_Red-p-500.png" /></a></p>
+          </div>
+        </div>
       </div>
     `
   }
