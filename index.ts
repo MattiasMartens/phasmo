@@ -303,8 +303,19 @@ function* without<T, K>(arr: Iterable<T>, against: Iterable<T>, keyFn: (item: T)
 
 function indexOfFirstSuperior<T>(arr: T[], el: T, fn: (a: T, b: T) => number) {
   function recurse(arr: T[], el: T, fn: (a: T, b: T) => number, offset: number): number {
-    if (arr.length <= 1) {
-      return (arr.length && fn(el, arr[0]) > 0) ? offset + 1 : 0
+    if (arr.length === 0) {
+      return 0
+    } else if (arr.length === 1) {
+      if (fn(el, arr[0]) > 0) {
+        return offset + 1
+      } else if (fn(el, arr[0]) === 0) {
+        // In case of a tie, incoming value should be inserted after existing
+        return offset + 1
+      } else {
+        // Toss control over to other fork of recursion, or element will be
+        // inserted at start.
+        return 0
+      }
     } else {
       const recurseLeft = recurse(arr.slice(0, arr.length / 2), el, fn, offset)
       const recurseRight = recurse(arr.slice(arr.length / 2, arr.length), el, fn, offset + Math.floor(arr.length / 2))
@@ -502,23 +513,24 @@ Vue.createApp(
       const ghostCheckState: Map<Ghost, Possible<boolean>> = Vue.reactive(new Map())
 
       const possibleGhosts = Vue.computed(
-        () => [...mapIterable<[Ghost, [Evidence, Evidence, Evidence]], Ghost>(
-          filterIterable(
-            ghostsToEvidences,
-            ([, evidences]) => {
-              for (const evidence of evidenceList) {
-                if (evidenceCheckState.get(evidence) && !evidences.includes(evidence)) {
-                  return false
-                } else if (evidenceCheckState.get(evidence) === false && evidences.includes(evidence)) {
-                  return false
+        () => fromIterableSorted(
+          mapIterable<[Ghost, [Evidence, Evidence, Evidence]], Ghost>(
+            filterIterable(
+              ghostsToEvidences,
+              ([, evidences]) => {
+                for (const evidence of evidenceList) {
+                  if (evidenceCheckState.get(evidence) && !evidences.includes(evidence)) {
+                    return false
+                  } else if (evidenceCheckState.get(evidence) === false && evidences.includes(evidence)) {
+                    return false
+                  }
                 }
-              }
 
-              return true
-            }
+                return true
+              }
+            ),
+            tupleFirst
           ),
-          tupleFirst
-        )].sort(
           scalarSort(
             g => {
               const checkState = ghostCheckState.get(g)
@@ -584,13 +596,16 @@ Vue.createApp(
       )
 
       const loggedEvidences = Vue.computed(
-        () => [...mapIterable<[Evidence, boolean], Evidence>(
-          filterIterable(
-            evidenceCheckState,
-            ([, b]) => b !== undefined
+        () => fromIterableSorted(
+          mapIterable<[Evidence, boolean], Evidence>(
+            filterIterable(
+              evidenceCheckState,
+              ([, b]) => b !== undefined
+            ),
+            tupleFirst
           ),
-          tupleFirst
-        )].sort(scalarSort(e => -Number(evidenceCheckState.get(e))))
+          scalarSort(e => -Number(evidenceCheckState.get(e)))
+        )
       )
 
       const possibleEvidences = Vue.computed(
