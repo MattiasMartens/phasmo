@@ -365,30 +365,30 @@ function fromIterableSorted<T>(iterable: Iterable<T>, sortFn: (t1: T, t2: T) => 
   return retArr
 }
 /* End imported */
-type Evidence = 'EMF 5' | 'Freezing Temperatures' | 'Ghost Orbs' | 'Spirit Box' | 'Ghost Writing' | 'Fingerprints'
+type Evidence = 'EMF Level 5' | 'Freezing Temperatures' | 'Ghost Orb' | 'Spirit Box' | 'Ghost Writing' | 'Fingerprints'
 type Ghost = 'Spirit' | 'Phantom' | 'Banshee' | 'Wraith' | 'Poltergeist' | 'Revenant' | 'Yurei' | 'Oni' | 'Jinn' | 'Mare' | 'Shade' | 'Demon'
 
 const ghostsToEvidences = new Map<Ghost, [Evidence, Evidence, Evidence]>([
-  ['Spirit', ['Fingerprints', 'Ghost Writing', 'Spirit Box']],
-  ['Wraith', ['Freezing Temperatures', 'Spirit Box', 'Fingerprints']],
-  ['Phantom', ['Freezing Temperatures', 'EMF 5', 'Ghost Orbs']],
-  ['Poltergeist', ['Ghost Orbs', 'Spirit Box', 'Fingerprints']],
-  ['Banshee', ['Freezing Temperatures', 'EMF 5', 'Fingerprints']],
-  ['Jinn', ['Ghost Orbs', 'EMF 5', 'Spirit Box']],
-  ['Mare', ['Freezing Temperatures', 'Spirit Box', 'Ghost Orbs']],
-  ['Revenant', ['EMF 5', 'Fingerprints', 'Ghost Writing']],
-  ['Shade', ['EMF 5', 'Ghost Orbs', 'Ghost Writing']],
+  ['Spirit', ['Spirit Box', 'Fingerprints', 'Ghost Writing']],
+  ['Wraith', ['Fingerprints', 'Freezing Temperatures', 'Spirit Box']],
+  ['Phantom', ['EMF Level 5', 'Ghost Orb', 'Freezing Temperatures']],
+  ['Poltergeist', ['Spirit Box', 'Fingerprints', 'Ghost Orb']],
+  ['Banshee', ['EMF Level 5', 'Fingerprints', 'Freezing Temperatures']],
+  ['Jinn', ['Spirit Box', 'Ghost Orb', 'EMF Level 5']],
+  ['Mare', ['Spirit Box', 'Ghost Orb', 'Freezing Temperatures']],
+  ['Revenant', ['EMF Level 5', 'Fingerprints', 'Ghost Writing']],
+  ['Shade', ['EMF Level 5', 'Ghost Orb', 'Ghost Writing']],
   ['Demon', ['Spirit Box', 'Ghost Writing', 'Freezing Temperatures']],
-  ['Yurei', ['Freezing Temperatures', 'Ghost Orbs', 'Ghost Writing']],
-  ['Oni', ['EMF 5', 'Spirit Box', 'Ghost Writing']]
+  ['Yurei', ['Ghost Orb', 'Ghost Writing', 'Freezing Temperatures']],
+  ['Oni', ['EMF Level 5', 'Spirit Box', 'Ghost Writing']]
 ])
 
 const evidenceList: Evidence[] = [
-  'EMF 5',
+  'EMF Level 5',
   'Spirit Box',
-  'Ghost Orbs',
-  'Ghost Writing',
   'Fingerprints',
+  'Ghost Orb',
+  'Ghost Writing',
   'Freezing Temperatures'
 ]
 
