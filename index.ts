@@ -377,7 +377,7 @@ const ghostsToEvidences = new Map<Ghost, [Evidence, Evidence, Evidence]>([
   ['Jinn', ['Ghost Orbs', 'EMF 5', 'Spirit Box']],
   ['Mare', ['Freezing Temperatures', 'Spirit Box', 'Ghost Orbs']],
   ['Revenant', ['EMF 5', 'Fingerprints', 'Ghost Writing']],
-  ['Shade', ['EMF 5', 'Ghost Orbs', 'Fingerprints']],
+  ['Shade', ['EMF 5', 'Ghost Orbs', 'Ghost Writing']],
   ['Demon', ['Spirit Box', 'Ghost Writing', 'Freezing Temperatures']],
   ['Yurei', ['Freezing Temperatures', 'Ghost Orbs', 'Ghost Writing']],
   ['Oni', ['EMF 5', 'Spirit Box', 'Ghost Writing']]
