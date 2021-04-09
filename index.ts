@@ -4,7 +4,8 @@ import {
   computed,
   unref,
   defineComponent,
-  watch
+  watch,
+  ref
 } from 'vue'
 
 const Vue = {
@@ -13,7 +14,8 @@ const Vue = {
   computed,
   unref,
   defineComponent,
-  watch
+  watch,
+  ref
 }
 /**/"@begin"/**/
 /**
@@ -783,6 +785,13 @@ Vue.createApp(
         }
       )
 
+      const inMyJournal = Vue.ref(false)
+
+      Vue.watch(
+        ghostDetermined,
+        () => inMyJournal.value = false
+      )
+
       return {
         article,
         possibleGhosts,
@@ -869,8 +878,15 @@ Vue.createApp(
           <div class="col">
             <h2 class="final--header" v-if="ghostDetermined">
               The ghost is {{article(ghostDetermined)}}<br />
-              <span class="final-ghost">{{ghostDetermined}}</span><br />
-              <span v-if="suggestRuleIn" class="suggest-rule-in">(…Or, you need to rule in more ghosts.)</span>
+              <span class="final-ghost">{{ghostDetermined}}</span>
+              <br />
+              <template v-if="suggestRuleIn>
+                <br /><span class="suggest-rule-in">(…Or, you need to rule in more ghosts.)</span>
+              </template>
+              <div class="form-group">
+                <label>Entered in my journal</label>
+                <input type="checkbox" v-model="inMyJournal" />
+              </div>
             </h2>
             <h2 v-else>
               Possible Ghosts
