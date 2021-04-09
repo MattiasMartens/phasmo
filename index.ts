@@ -805,6 +805,7 @@ Vue.createApp(
         areExclusions,
         ghostDetermined,
         isRemainingPossibleRefinedByCheckboxGhost,
+        inMyJournal,
         newGame,
         resetEvidence,
         resetGhosts,
@@ -880,17 +881,17 @@ Vue.createApp(
               The ghost is {{article(ghostDetermined)}}<br />
               <span class="final-ghost">{{ghostDetermined}}</span>
               <br />
-              <template v-if="suggestRuleIn>
+              <template v-if="suggestRuleIn">
                 <br /><span class="suggest-rule-in">(…Or, you need to rule in more ghosts.)</span>
               </template>
-              <div class="form-group">
-                <label>Entered in my journal</label>
-                <input type="checkbox" v-model="inMyJournal" />
-              </div>
             </h2>
             <h2 v-else>
               Possible Ghosts
             </h2>
+            <div v-if="ghostDetermined" class="ghost-determined--form-group">
+              <input type="checkbox" v-model="inMyJournal" />
+              <label>Entered in my journal</label>
+            </div>
           </div>
         </div>
         <div class="section--ghosts">
