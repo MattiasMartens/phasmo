@@ -348,14 +348,6 @@ function scalarSort<T>(fn: (t: T) => string | number) {
   }
 }
 
-function countIterable<T>(arr: Iterable<T>, condition: (t: T) => boolean = () => true) {
-  let inc = 0
-  for (const t of arr) {
-    condition(t) && inc++
-  }
-  return inc
-}
-
 function existIterable<T>(arr: Iterable<T>, condition: (t: T) => boolean = () => true) {
   for (const t of arr) {
     if (condition(t)) {
@@ -379,7 +371,7 @@ function fromIterableSorted<T>(iterable: Iterable<T>, sortFn: (t1: T, t2: T) => 
 }
 /* End imported */
 type Evidence = 'EMF Level 5' | 'Freezing Temperatures' | 'Ghost Orb' | 'Spirit Box' | 'Ghost Writing' | 'Fingerprints'
-type Ghost = 'Spirit' | 'Phantom' | 'Banshee' | 'Wraith' | 'Poltergeist' | 'Revenant' | 'Yurei' | 'Oni' | 'Jinn' | 'Mare' | 'Shade' | 'Demon'
+type Ghost = 'Spirit' | 'Phantom' | 'Banshee' | 'Wraith' | 'Poltergeist' | 'Revenant' | 'Yurei' | 'Oni' | 'Jinn' | 'Mare' | 'Shade' | 'Demon' | 'Yokai' | 'Hantu'
 
 const ghostsToEvidences = new Map<Ghost, [Evidence, Evidence, Evidence]>([
   ['Spirit', ['Spirit Box', 'Fingerprints', 'Ghost Writing']],
@@ -393,7 +385,9 @@ const ghostsToEvidences = new Map<Ghost, [Evidence, Evidence, Evidence]>([
   ['Shade', ['EMF Level 5', 'Ghost Orb', 'Ghost Writing']],
   ['Demon', ['Spirit Box', 'Ghost Writing', 'Freezing Temperatures']],
   ['Yurei', ['Ghost Orb', 'Ghost Writing', 'Freezing Temperatures']],
-  ['Oni', ['EMF Level 5', 'Spirit Box', 'Ghost Writing']]
+  ['Oni', ['EMF Level 5', 'Spirit Box', 'Ghost Writing']],
+  ['Yokai', ['Spirit Box', 'Ghost Writing', 'Ghost Orb']],
+  ['Hantu', ['Fingerprints', 'Ghost Writing', 'Ghost Orb']]
 ])
 
 const evidenceList: Evidence[] = [
