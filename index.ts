@@ -370,24 +370,170 @@ function fromIterableSorted<T>(iterable: Iterable<T>, sortFn: (t1: T, t2: T) => 
   return retArr
 }
 /* End imported */
-type Evidence = 'EMF Level 5' | 'Freezing Temperatures' | 'Ghost Orb' | 'Spirit Box' | 'Ghost Writing' | 'Fingerprints'
-type Ghost = 'Spirit' | 'Phantom' | 'Banshee' | 'Wraith' | 'Poltergeist' | 'Revenant' | 'Yurei' | 'Oni' | 'Jinn' | 'Mare' | 'Shade' | 'Demon' | 'Yokai' | 'Hantu'
+type Evidence = 'EMF Level 5' | 'Freezing Temperatures' | 'Ghost Orb' | 'Spirit Box' | 'Ghost Writing' | 'Fingerprints' | 'D.O.T.S. Projector'
+type Ghost = 'Banshee' | 'Demon' | 'Goryo' | 'Hantu' | 'Jinn' | 'Mare' | 'Myling' | 'Obake' | 'Oni' | 'Onryo' | 'Phantom' | 'Poltergeist' | 'Raiju' | 'Revenant' | 'Shade' | 'Spirit' | 'The Twins' | 'Wraith' | 'Yokai' | 'Yurei'
 
 const ghostsToEvidences = new Map<Ghost, [Evidence, Evidence, Evidence]>([
-  ['Spirit', ['Spirit Box', 'Fingerprints', 'Ghost Writing']],
-  ['Wraith', ['Fingerprints', 'Freezing Temperatures', 'Spirit Box']],
-  ['Phantom', ['EMF Level 5', 'Ghost Orb', 'Freezing Temperatures']],
-  ['Poltergeist', ['Spirit Box', 'Fingerprints', 'Ghost Orb']],
-  ['Banshee', ['EMF Level 5', 'Fingerprints', 'Freezing Temperatures']],
-  ['Jinn', ['Spirit Box', 'Ghost Orb', 'EMF Level 5']],
-  ['Mare', ['Spirit Box', 'Ghost Orb', 'Freezing Temperatures']],
-  ['Revenant', ['EMF Level 5', 'Fingerprints', 'Ghost Writing']],
-  ['Shade', ['EMF Level 5', 'Ghost Orb', 'Ghost Writing']],
-  ['Demon', ['Spirit Box', 'Ghost Writing', 'Freezing Temperatures']],
-  ['Yurei', ['Ghost Orb', 'Ghost Writing', 'Freezing Temperatures']],
-  ['Oni', ['EMF Level 5', 'Spirit Box', 'Ghost Writing']],
-  ['Yokai', ['Spirit Box', 'Ghost Writing', 'Ghost Orb']],
-  ['Hantu', ['Fingerprints', 'Ghost Writing', 'Ghost Orb']]
+  [
+    "Banshee",
+    [
+      "D.O.T.S. Projector",
+      "Ghost Orb",
+      "Fingerprints"
+    ]
+  ],
+  [
+    "Demon",
+    [
+      "Ghost Writing",
+      "Fingerprints",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Goryo",
+    [
+      "D.O.T.S. Projector",
+      "EMF Level 5",
+      "Fingerprints"
+    ]
+  ],
+  [
+    "Hantu",
+    [
+      "Ghost Orb",
+      "Fingerprints",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Jinn",
+    [
+      "EMF Level 5",
+      "Fingerprints",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Mare",
+    [
+      "Ghost Writing",
+      "Ghost Orb",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Myling",
+    [
+      "Ghost Writing",
+      "EMF Level 5",
+      "Fingerprints"
+    ]
+  ],
+  [
+    "Obake",
+    [
+      "EMF Level 5",
+      "Ghost Orb",
+      "Fingerprints"
+    ]
+  ],
+  [
+    "Oni",
+    [
+      "D.O.T.S. Projector",
+      "EMF Level 5",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Onryo",
+    [
+      "Ghost Orb",
+      "Freezing Temperatures",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Phantom",
+    [
+      "D.O.T.S. Projector",
+      "Fingerprints",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Poltergeist",
+    [
+      "Ghost Writing",
+      "Fingerprints",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Raiju",
+    [
+      "D.O.T.S. Projector",
+      "EMF Level 5",
+      "Ghost Orb"
+    ]
+  ],
+  [
+    "Revenant",
+    [
+      "Ghost Writing",
+      "Ghost Orb",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Shade",
+    [
+      "Ghost Writing",
+      "EMF Level 5",
+      "Freezing Temperatures"
+    ]
+  ],
+  [
+    "Spirit",
+    [
+      "Ghost Writing",
+      "EMF Level 5",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "The Twins",
+    [
+      "EMF Level 5",
+      "Freezing Temperatures",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Wraith",
+    [
+      "D.O.T.S. Projector",
+      "EMF Level 5",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Yokai",
+    [
+      "D.O.T.S. Projector",
+      "Ghost Orb",
+      "Spirit Box"
+    ]
+  ],
+  [
+    "Yurei",
+    [
+      "D.O.T.S. Projector",
+      "Ghost Orb",
+      "Freezing Temperatures"
+    ]
+  ]
 ])
 
 const evidenceList: Evidence[] = [
@@ -396,7 +542,8 @@ const evidenceList: Evidence[] = [
   'Fingerprints',
   'Ghost Orb',
   'Ghost Writing',
-  'Freezing Temperatures'
+  'Freezing Temperatures',
+  'D.O.T.S. Projector'
 ]
 
 const evidencesToGhosts = invertBinMap(ghostsToEvidences)
@@ -920,7 +1067,8 @@ Vue.createApp(
           <div class="col">
             <p>App by Mattias Martens (<a href="https://www.linkedin.com/in/mattias-martens-4b64a05a/">LinkedIn</a>)</p>
             <p>Fonts:<ul><li><a href="https://www.1001fonts.com/october-crow-font.html">October Crow</a> by <a href="http://www.sinisterfonts.com/">Chad Savage</a></li><li><a href="https://fonts.google.com/specimen/Gentium+Basic">Gentium Basic</a> by <a href="https://gaultney.org/jvgtype/">Victor Gaultney</a></li><li><a href="https://fonts.google.com/specimen/Ubuntu">Ubuntu</a> by <a href="https://www.daltonmaag.com/">Dalton Maag</a></li></ul></p>
-            <p class="ko-fi">Did the app help you? Think about saying thanks by kicking over a couple bucks on Ko-fi:<br /> <a href="https://ko-fi.com/mattiasmartens" target="_blank"><img :width="125" src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/5cbed8a4cf61ec6d7e012820_BuyMeACoffeeofi_Red-p-500.png" /></a></p>
+            <p>Last updated Oct. 31, 2021</p>
+            <p class="ko-fi">Feeling helped? Consider throwing money into the Thanking Hole:<br /> <a href="https://ko-fi.com/mattiasmartens" target="_blank"><img :width="125" src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/5cbed8a4cf61ec6d7e012820_BuyMeACoffeeofi_Red-p-500.png" /></a></p>
           </div>
         </div>
       </div>
