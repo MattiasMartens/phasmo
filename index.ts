@@ -1065,9 +1065,9 @@ Vue.createApp(
         </div>
         <div class="row footer">
           <div class="col">
+            <p>Last updated Oct. 31, 2021</p>
             <p>App by Mattias Martens (<a href="https://www.linkedin.com/in/mattias-martens-4b64a05a/">LinkedIn</a>)</p>
             <p>Fonts:<ul><li><a href="https://www.1001fonts.com/october-crow-font.html">October Crow</a> by <a href="http://www.sinisterfonts.com/">Chad Savage</a></li><li><a href="https://fonts.google.com/specimen/Gentium+Basic">Gentium Basic</a> by <a href="https://gaultney.org/jvgtype/">Victor Gaultney</a></li><li><a href="https://fonts.google.com/specimen/Ubuntu">Ubuntu</a> by <a href="https://www.daltonmaag.com/">Dalton Maag</a></li></ul></p>
-            <p>Last updated Oct. 31, 2021</p>
             <p class="ko-fi">Feeling helped? Consider throwing money into the Thanking Hole:<br /> <a href="https://ko-fi.com/mattiasmartens" target="_blank"><img :width="125" src="https://uploads-ssl.webflow.com/5c14e387dab576fe667689cf/5cbed8a4cf61ec6d7e012820_BuyMeACoffeeofi_Red-p-500.png" /></a></p>
           </div>
         </div>
